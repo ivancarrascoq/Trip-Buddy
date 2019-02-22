@@ -1,0 +1,6 @@
+certifi==2018.11.29
+Django==2.1.7
+pipenv==2018.11.26
+pytz==2018.9
+virtualenv==16.4.0
+virtualenv-clone==0.5.1

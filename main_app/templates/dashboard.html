@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <br/>Your trip:<br/>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Destination</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Plan</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for trip in trips %} <!-- owner-->
+            <tr>
+            <td> <a href="{% url 'show' trip.id %}">{{ trip.destination }}</a> </td>
+            <td> {{ trip.start_date }} </td>
+            <td> {{ trip.end_date }} </td>
+            <td> {{ trip.plan }} </td>
+            <td> <a href="{% url 'remove' trip.id %}">Remove</a> | <a href="{% url 'edit' trip.id %}">Edit</a> </td>
+            </tr>
+        {% endfor %}
+        {% for tripj in trips_joined %} <!-- joined-->
+            <tr>
+            <td> <a href="{% url 'show' tripj.trip.id %}">{{ tripj.trip.destination }}</a> </td>
+            <td> {{ tripj.trip.start_date }} </td>
+            <td> {{ tripj.trip.end_date }} </td>
+            <td> {{ tripj.trip.plan }} </td>
+            <td> <a href="{% url 'cancel' tripj.id %}">Cancel</a></td>
+            </tr>
+        {% endfor %}        
+        </tbody>
+    </table>
+    
+    <br/>Other peoples's trips<br/>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Destination</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Plan</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for trip in trips_others %}
+            <tr>
+            <td> <a href="{% url 'show' trip.id %}">{{ trip.destination }} </a> </td>
+            <td> {{ trip.start_date }} </td>
+            <td> {{ trip.end_date }} </td>
+            <td> {{ trip.plan }} </td>
+            <td> <a href="{% url 'join' trip.id %}">Join</a> </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

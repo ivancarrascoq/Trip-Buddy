@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <div class="form-group w-75">
+        <label for="exampleFormControlTextarea3">{{ trip.destination }}</label>
+        <textarea class="form-control bg-light" id="exampleFormControlTextarea3" rows="7">
+Start Date: {{ trip.start_date}}
+End Date: {{ trip.end_date }}
+Plan: {{ trip.plan }}
+Created by: {{ trip.owner }}
+        </textarea>
+    </div>
+
+
+    <div class="form-group w-50">
+        <label for="exampleFormControlTextarea4"></label>
+        <textarea class="form-control bg-light" id="exampleFormControlTextarea4" rows="7">
+People who've joined the trip:
+{% for ppl in people %}
+{{ ppl.user.first_name | title }}
+{% endfor %}
+        </textarea>
+    </div>
+
+
+{% endblock %}
