@@ -15,7 +15,8 @@ from django.db.models import Q
 
 def index(request):
     msg = "Welcome! Let's Travel!"
-    context = {'message': msg}
+    form = SignupForm()
+    context = {'message': msg, 'form': form}
     if request.method == 'POST':
         print(request.POST)
         u = request.POST['email']
@@ -30,39 +31,46 @@ def index(request):
                 #return render(request, 'dashboard.html')
                 return HttpResponseRedirect('dashboard')
         else:
-            print('The username and password were incorrect.')
-            #return render(request, 'index.html')
-            return HttpResponseRedirect('/')
+            print('The username and/or password were incorrect.')
+            msg = "Welcome! Let's Travel!"
+            msg2 = 'The username and/or password were incorrect.'
+            form = SignupForm()
+            context = {'message': msg, 'form': form, 'msg2': msg2}
+            return render(request, 'index.html', context)
+            #return HttpResponseRedirect('/')
     else:
         return render(request, 'index.html', context)
         #return HttpResponseRedirect('/')
 
 def signup(request):
     msg = "Welcome! Let's Travel!"
-    context = {'message': msg}
+    #form = SignupForm()
+    context = {'message': msg}#, 'form': form}
     if request.method == 'POST':
-        print(request.POST)
-        fn = request.POST['first_name']
-        ln = request.POST['last_name']
-        u = request.POST['email']
-        p = request.POST['pwd']
-        p2 = request.POST['pwd_conf']
-        print(fn,ln,u,p,p2)
-        #user = authenticate(username = u, password = p)
-        #print(user)
-        r = User.objects.filter(username = u)
-        if r.count():
-            print("Email already exists")
-            return HttpResponseRedirect('/')
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            print(request.POST)
+            new_user = User(first_name = form.cleaned_data['first_name'],
+                            last_name = form.cleaned_data['last_name'],
+                            username = form.cleaned_data['username'],
+                            password = form.cleaned_data['password1'])
+            new_user.save()
+            print(new_user)
+            login(request, new_user)
+            return HttpResponseRedirect('dashboard')
         else:
-            if p and p2 and p == p2:
-                user = User.objects.create_user(first_name = fn, last_name = ln, username = u, password = p)
-                login(request, user)
-                return HttpResponseRedirect('dashboard')
-            else:
-                print('mismatch passwords')
-                return HttpResponseRedirect('/')
+            form1 = form
+            context = {'message':msg, 'form':form1}
+            #print("is_valid=false")
+            #print(form1)
+            return render(request, 'index.html', context)
+         #   return HttpResponseRedirect('/')
+        #    return render(request, 'index.html', {'form':form} )
+        #    return redirect('index', {'errors':form}) 
     else:
+        form = SignupForm()
+        context = {'message':msg, 'form':form}
+        print("is_valid=false")
         return render(request, 'index.html', context)
     return HttpResponseRedirect('/')
 
