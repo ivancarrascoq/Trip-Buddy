@@ -1,4 +1,4 @@
 *.pyc
 virtual/
-*.sqlite
+*.sqlite3
 migrations/

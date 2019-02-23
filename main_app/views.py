@@ -86,7 +86,8 @@ def logout_view(request):
 def dashboard(request):
     #print(user)
     username = request.user.first_name
-    print(username)
+    user_id = request.user.id
+    print(username, user_id )
     msg = 'Hello ' + username.title() + '!'
     #trips = Trip.objects.all()#filter(owner = user)
     #trips = [
@@ -134,13 +135,17 @@ def post_trip(request):
 def edit(request, id):
     print('edit trip')
     username = request.user.first_name
+    user_id = request.user.id
     print(id, username)
     my_trip = Trip.objects.get(id = id)
-    print(my_trip.id)
-    form = editTrip(instance = my_trip)
-    msg = "Hello " + username.title() +"! Let's edit your trip!"
-    context = {'message': msg, 'form': form, 'id': id}
-    return render(request, 'edit.html', context)
+    if my_trip.owner_id == user_id:
+        print(my_trip.id)
+        form = editTrip(instance = my_trip)
+        msg = "Hello " + username.title() +"! Let's edit your trip!"
+        context = {'message': msg, 'form': form, 'id': id}
+        return render(request, 'edit.html', context)
+    else:
+        return redirect('dashboard')
 
 @login_required
 def post_edit(request, id):
@@ -162,9 +167,11 @@ def post_edit(request, id):
 @login_required
 def remove(request, id):
     username = request.user.first_name
+    user_id = request.user.id
     print(id, username)
     my_trip = Trip.objects.get(id = id)
-    my_trip.delete()
+    if my_trip.owner_id == user_id:
+        my_trip.delete()
     #print(my_trip.id)
     #form = newTrip()
     #plan = 'nada concreto'
