@@ -3,12 +3,53 @@ from django.contrib.auth.models import User
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Trip
+from datetime import datetime
 
 class newTrip(forms.Form):
     destination = forms.CharField(min_length=3, max_length=100, widget=forms.TextInput(attrs={'class': "form-control"}) )
     start_date = forms.DateField( widget=forms.TextInput(attrs={'class': "form-control", 'type':"date" }) )
     end_date = forms.DateField( widget=forms.TextInput(attrs={'class': "form-control", 'type':"date" }) )
     plan = forms.CharField(min_length=3, max_length=200, widget=forms.Textarea(attrs={'class': "form-control"}) ) #min_length=3 
+#class newTrip(forms.ModelForm):
+#    class Meta:
+#        model = Trip
+#        fields = ['destination', 'start_date', 'end_date', 'plan']
+#        widgets={
+#                   "start_date":forms.TextInput(attrs={'class': "form-control", 'type':"date" }),
+#                   "end_date":forms.TextInput(attrs={'class': "form-control", 'type':"date" }),
+#                   "destination":forms.TextInput(attrs={'class': "form-control"}),
+#                   "plan":forms.Textarea(attrs={'class': "form-control"})
+#                }
+
+    def clean_plan(self):
+        plan = self.cleaned_data['plan']
+        if len(plan) < 3:
+            raise forms.ValidationError('Plan should have more letters')
+        return plan
+
+    def clean_start_date(self):
+        start_date = self.cleaned_data['start_date']
+        if start_date <= datetime.now().date():
+            raise forms.ValidationError('Start Date must be greater than today')
+        return start_date
+
+    def clean_end_date(self):
+        end_date = self.cleaned_data['end_date']
+        if end_date <= datetime.now().date():
+            raise forms.ValidationError('End Date must be greater than today')
+        return end_date
+
+#    def clean(self):
+#        def to_integer(dt_time):
+#            0 if dt_time.year
+#            return 10000*dt_time.year + 100*dt_time.month + dt_time.day
+#        cleaned_data = super().clean()
+#        end_date = to_integer(cleaned_data.get('end_date'))
+#        start_date = to_integer(cleaned_data.get('start_date'))
+#        if start_date >= end_date:
+#            raise ValidationError('End Date must be greater than Start Date')
+#        return self.cleaned_data
+
 
 class editTrip(forms.ModelForm):
     class Meta:
@@ -20,6 +61,24 @@ class editTrip(forms.ModelForm):
                    "destination":forms.TextInput(attrs={'class': "form-control"}),
                    "plan":forms.Textarea(attrs={'class': "form-control"})
                 } 
+                
+    def clean_plan(self):
+        plan = self.cleaned_data['plan']
+        if len(plan) < 3:
+            raise forms.ValidationError('Plan should have more letters')
+        return plan
+
+    def clean_start_date(self):
+        start_date = self.cleaned_data['start_date']
+        if start_date <= datetime.now().date():
+            raise forms.ValidationError('Start Date must be greater than today')
+        return start_date
+
+    def clean_end_date(self):
+        end_date = self.cleaned_data['end_date']
+        if end_date <= datetime.now().date():
+            raise forms.ValidationError('End Date must be greater than today')
+        return end_date
 
 class SignupForm(forms.Form):
     first_name = forms.CharField(label='Enter Firstname', min_length=3, max_length=150,

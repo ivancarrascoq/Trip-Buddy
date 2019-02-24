@@ -3,6 +3,13 @@
 
 {% block content %}
 
+{% if form.errors %}
+    {{ form.destination.errors }}
+    {{ form.start_date.errors }}
+    {{ form.end_date.errors }}
+    {{ form.plan.errors }}
+{% endif %}
+
     <div class="col-md-8 col-xs-8 col-sm-8 form-group border rounded p-5 m-4 h-100" >
         <form method="POST" action="{% url 'post_trip' %}">
             {% csrf_token %}
@@ -28,7 +35,7 @@
                     <!--input type="date" class="form-control" id="inputlast2" name="end_date"-->
                     <i class="fa fa-calendar" style="font-size:36px"></i>
                 </div>
-            </div>            
+            </div> <br/>          
 
             <div class="form-group row">
                 <label for="inputPlan" class="col-sm-2 col-form-label">Plan</label>

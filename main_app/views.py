@@ -95,7 +95,8 @@ def dashboard(request):
     #    Trip(2, 'Paris', '10/15/19', '11/1/2019', 'cheese tour'),
     #    Trip(3, 'Buenos Aires', '11/3/19', '11/15/19', 'see Iguazy Falls'),
     #]
-    trips = Trip.objects.filter(owner = request.user)
+    trips = Trip.objects.filter(owner = request.user).order_by('-created_at')
+    #Trip.objects.filter(owner_id=2).order_by('-created_at')
     trips3 = TripJoined.objects.filter(user = request.user)
     print('joined')
     print(trips3)
@@ -109,6 +110,9 @@ def dashboard(request):
     #cap 2.2 create a class for each trip.
     return render(request, 'dashboard.html', context)
 
+
+
+
 @login_required
 def new(request):
     username = request.user.first_name
@@ -117,11 +121,16 @@ def new(request):
     context = {'message': msg, 'form': form }
     return render(request,'new.html', context)
 
+
+
+
+
 @login_required
 def post_trip(request):
     print('post create trip')
     form = newTrip(request.POST)
     if form.is_valid():
+        print('valid')
         trip = Trip(owner= request.user, 
             destination= form.cleaned_data['destination'], 
             plan= form.cleaned_data['plan'], 
@@ -129,7 +138,14 @@ def post_trip(request):
             end_date = form.cleaned_data['end_date']
         )
         trip.save()
-    return HttpResponseRedirect('dashboard')
+        return redirect('dashboard')
+    else:
+        username = request.user.first_name
+        msg = "Hello " + username.title() + "! Create a trip!"
+        #form = newTrip()
+        context = {'message': msg, 'form': form }  
+        return render(request,'new.html', context)
+#    return HttpResponseRedirect('dashboard')
 
 @login_required
 def edit(request, id):
@@ -163,6 +179,15 @@ def post_edit(request, id):
         trip.end_date = form.cleaned_data['end_date']
         trip.save()
     return redirect('dashboard')
+    #else:
+        #username = request.user.first_name
+        #msg = "Hello " + username.title() +"! Let's edit your trip!"
+        #form = newTrip()
+        #context = {'message': msg, 'form': form }  
+        #print(id)
+        #return redirect('edit', {'id': id, 'context': context} )
+        #return render(request, 'edit.html', context)
+
 
 @login_required
 def remove(request, id):

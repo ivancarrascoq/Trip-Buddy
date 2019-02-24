@@ -4,7 +4,7 @@
 {% block content %}
 
     <div class="form-group w-75">
-        <label for="exampleFormControlTextarea3">{{ trip.destination }}</label>
+        <h3 class="display-6">{{ trip.destination }}</h3>
         <textarea class="form-control bg-light" id="exampleFormControlTextarea3" rows="7">
 Start Date: {{ trip.start_date|date:"n/j/y" }}
 End Date: {{ trip.end_date|date:"n/j/y" }}
