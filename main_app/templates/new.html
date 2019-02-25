@@ -9,7 +9,9 @@
     {{ form.end_date.errors }}
     {{ form.plan.errors }}
 {% endif %}
-
+{% if msg2 %}
+    <ul class="errorlist"><li>{{ msg2 }}</li></ul> 
+{% endif %}
     <div class="col-md-8 col-xs-8 col-sm-8 form-group border rounded p-5 m-4 h-100" >
         <form method="POST" action="{% url 'post_trip' %}">
             {% csrf_token %}

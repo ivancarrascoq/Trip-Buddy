@@ -30,13 +30,13 @@ class newTrip(forms.Form):
     def clean_start_date(self):
         start_date = self.cleaned_data['start_date']
         if start_date <= datetime.now().date():
-            raise forms.ValidationError('Start Date must be greater than today')
+            raise forms.ValidationError('Start Date must take place in the future')
         return start_date
 
     def clean_end_date(self):
         end_date = self.cleaned_data['end_date']
         if end_date <= datetime.now().date():
-            raise forms.ValidationError('End Date must be greater than today')
+            raise forms.ValidationError('End Date must take place in the future')
         return end_date
 
 #    def clean(self):
@@ -71,13 +71,13 @@ class editTrip(forms.ModelForm):
     def clean_start_date(self):
         start_date = self.cleaned_data['start_date']
         if start_date <= datetime.now().date():
-            raise forms.ValidationError('Start Date must be greater than today')
+            raise forms.ValidationError('Start Date must take place in the future')
         return start_date
 
     def clean_end_date(self):
         end_date = self.cleaned_data['end_date']
         if end_date <= datetime.now().date():
-            raise forms.ValidationError('End Date must be greater than today')
+            raise forms.ValidationError('End Date must take place in the future')
         return end_date
 
 class SignupForm(forms.Form):

@@ -131,14 +131,24 @@ def post_trip(request):
     form = newTrip(request.POST)
     if form.is_valid():
         print('valid')
-        trip = Trip(owner= request.user, 
-            destination= form.cleaned_data['destination'], 
-            plan= form.cleaned_data['plan'], 
-            start_date = form.cleaned_data['start_date'], 
-            end_date = form.cleaned_data['end_date']
-        )
-        trip.save()
-        return redirect('dashboard')
+        start_date = form.cleaned_data['start_date'] 
+        end_date = form.cleaned_data['end_date']
+        if start_date < end_date:
+            trip = Trip(owner= request.user, 
+                destination= form.cleaned_data['destination'], 
+                plan= form.cleaned_data['plan'], 
+                start_date = form.cleaned_data['start_date'], 
+                end_date = form.cleaned_data['end_date']
+            )
+            trip.save()
+            return redirect('dashboard')
+        else:
+            username = request.user.first_name
+            msg = "Hello " + username.title() + "! Create a trip!"
+            msg2 = "Are you attempting to time travel? (End Date must be after Start Date)"
+            #form = newTrip()
+            context = {'message': msg, 'form': form, 'msg2':msg2 }  
+            return render(request,'new.html', context)
     else:
         username = request.user.first_name
         msg = "Hello " + username.title() + "! Create a trip!"
@@ -172,6 +182,9 @@ def post_edit(request, id):
     #print(my_trip.id)
     form = editTrip(request.POST)#, instance = my_trip)
     if form.is_valid():
+        start_date = form.cleaned_data['start_date'] 
+        end_date = form.cleaned_data['end_date']
+        #if start_date < end_date:
         trip = Trip.objects.get(id = id)
         trip.destination= form.cleaned_data['destination']
         trip.plan= form.cleaned_data['plan']
@@ -179,6 +192,15 @@ def post_edit(request, id):
         trip.end_date = form.cleaned_data['end_date']
         trip.save()
     return redirect('dashboard')
+    #    else:
+    #        username = request.user.first_name
+    #        msg = "Hello " + username.title() + "! Create a trip!"
+    #        msg2 = "Are you attempting to time travel?"
+    #        #form = newTrip()
+    #        context = {'message': msg, 'form': form, 'msg2':msg2 }  
+    #        return render(request,'edit.html'+str(id), context)
+    #return render(request, url + 'trips/edit/'+ str(id))
+    #return redirect('post_edit')
     #else:
         #username = request.user.first_name
         #msg = "Hello " + username.title() +"! Let's edit your trip!"
